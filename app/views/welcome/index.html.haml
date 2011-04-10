@@ -1,1 +1,7 @@
 - title "Магазин Кредитов: Черный список клиентов"
+
+.search-form
+	- form_tag clients_path, :method => "get" do
+		%p
+			= text_field_tag :query, params[:query]
+			= submit_tag "Поиск", :name => nil

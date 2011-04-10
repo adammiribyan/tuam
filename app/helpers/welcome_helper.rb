@@ -2,7 +2,7 @@
 
 module WelcomeHelper
   def answer
-    if @clients.present?
+    if @client.present?
       "Да"
     else
       "Нет"

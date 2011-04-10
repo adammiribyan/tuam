@@ -1,6 +1,6 @@
 class WelcomeController < ApplicationController
   def index
-    @clients = Client.search(params[:query])
+    @client = Client.search(params[:query])
   end
 
 end

@@ -13,7 +13,7 @@ set :deploy_via, :remote_cache
 ssh_options[:forward_agent] = true
 default_run_options[:pty] = true
 
-set :keep_releases, 10
+set :keep_releases, 5
 set :use_sudo, false
 
 set :branch, "master"
@@ -69,6 +69,10 @@ unless exists?(:config_files)
   set :config_files, %w(database.yml)
 end
 
+unless exists?(:shared_dirs)
+  set :shared_dirs, %w(uploads)
+end
+
 namespace :symlink do
   desc <<-DESC
   Create shared directories. Specify which directories are shared via:
@@ -106,6 +110,13 @@ namespace :symlink do
     end if config_files
   end
   
+    
+  desc "Create link to db/production.sqlite3 for saving data after each deploy command"
+  task :shared_data_file, :roles => :app do
+    run "#{sudo} rm -f #{db_path}production.sqlite3" 
+    run "#{sudo} ln -nfs #{shared_db_path}production.sqlite3 #{db_path}production.sqlite3"
+  end
+  
 end
 
 def config_path
@@ -129,9 +140,18 @@ namespace :deploy do
   task :restart, :roles => :app do
     run "touch #{current_path}/tmp/restart.txt"
   end
+  
+  desc "Generating css from less files"
+  task :stylesheets, :roles => :app do
+    run_rake "more:generate"
+  end
 end
 
+after "deploy:setup" do
+  db.create_yaml if Capistrano::CLI.ui.agree("Create database.yml in app's shared path?")  
+end
 after "deploy:setup", "symlink:create_shared_dirs"
 after "deploy:update_code", "symlink:shared_directories"
 after "deploy:update_code", "symlink:shared_config_files"
+after "deploy", "deploy:stylesheets"
 after "deploy", "deploy:cleanup"

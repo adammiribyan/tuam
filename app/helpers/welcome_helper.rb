@@ -3,9 +3,9 @@
 module WelcomeHelper
   def answer
     if @client.present?
-      "Да"
+      "— <span class=\"ano\">Да.</span>".html_safe
     else
-      "Нет"
+      "— <span class=\"ne\">Нет.</span>".html_safe
     end
   end
   

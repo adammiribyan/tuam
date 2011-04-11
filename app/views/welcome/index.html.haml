@@ -1,10 +1,15 @@
 - title "Магазин Кредитов: Черный список клиентов"
 
-.search-form
-	- form_tag "/", :method => "get" do
-		%p
-			= text_field_tag :query, params[:query]
-			= submit_tag "Поиск", :name => nil
-			
-.content
-	= answer if params[:query].present?
+.page-container
+	.logo
+		= image_tag "logo.jpg"
+	.search-form
+		= form_tag "/", :method => "get" do
+			%p
+				%label{:for => "query"}	— Находится ли в «черном» списке
+				= text_field_tag :query, params[:query], :id => "query", :placeholder => "ФИО"				
+				= submit_tag "Поиск", :name => nil
+				?
+				
+	.content	
+		= answer if params[:query].present?

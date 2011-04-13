@@ -7,9 +7,10 @@
 		= form_tag "/", :method => "get" do
 			%p
 				%label{:for => "query"}	— Находится ли в «черном» списке
-				= text_field_tag :query, params[:query], :id => "query", :placeholder => "ФИО"				
+				= text_field_tag :query, params[:query], :id => "query"					
 				= submit_tag "Поиск", :name => nil
 				?
+				%span.hint ФИО
 				
 	.content	
 		= answer if params[:query].present?
